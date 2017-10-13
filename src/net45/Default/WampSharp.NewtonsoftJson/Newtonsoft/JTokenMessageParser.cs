@@ -53,7 +53,11 @@ namespace WampSharp.Newtonsoft
         {
             try
             {
-                using (JsonReader reader = new JsonTextReader(new StreamReader(stream)) {CloseInput = false})
+                using (JsonReader reader = new JsonTextReader(new StreamReader(stream))
+                {
+                    CloseInput = false,
+                    DateParseHandling = DateParseHandling.None
+                })
                 {
                     JToken parsed = JToken.ReadFrom(reader);
                     return mMessageFormatter.Parse(parsed);
