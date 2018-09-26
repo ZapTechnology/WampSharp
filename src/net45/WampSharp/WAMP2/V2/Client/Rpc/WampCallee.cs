@@ -101,7 +101,7 @@ namespace WampSharp.V2.Client
         private Task Unregister(long registrationId)
         {
             UnregisterRequest unregisterRequest =
-                new UnregisterRequest(mFormatter);
+                new UnregisterRequest(mFormatter, registrationId);
 
             long requestId = mPendingUnregistrations.Add(unregisterRequest);
 
@@ -119,7 +119,7 @@ namespace WampSharp.V2.Client
             if (mPendingUnregistrations.TryRemove(requestId, out unregisterRequest))
             {
                 IWampRpcOperation operation;
-                mRegistrations.TryRemove(requestId, out operation);
+                mRegistrations.TryRemove(unregisterRequest.RegistrationId, out operation);
                 unregisterRequest.Complete();
             }
         }
@@ -274,9 +274,12 @@ namespace WampSharp.V2.Client
 
         private class UnregisterRequest : WampPendingRequest<TMessage>
         {
-            public UnregisterRequest(IWampFormatter<TMessage> formatter) : base(formatter)
+            public UnregisterRequest(IWampFormatter<TMessage> formatter, long registrationId) : base(formatter)
             {
+                RegistrationId = registrationId;
             }
+
+            public long RegistrationId { get; private set; }
         }
 
         public void OnConnectionError(object sender, WampConnectionErrorEventArgs eventArgs)
