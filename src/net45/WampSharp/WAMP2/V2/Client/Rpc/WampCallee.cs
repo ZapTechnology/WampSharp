@@ -106,6 +106,7 @@ namespace WampSharp.V2.Client
             long requestId = mPendingUnregistrations.Add(unregisterRequest);
 
             unregisterRequest.RequestId = requestId;
+            unregisterRequest.RegistrationId = registrationId;
 
             mProxy.Unregister(requestId, registrationId);
 
@@ -119,7 +120,7 @@ namespace WampSharp.V2.Client
             if (mPendingUnregistrations.TryRemove(requestId, out unregisterRequest))
             {
                 IWampRpcOperation operation;
-                mRegistrations.TryRemove(requestId, out operation);
+                mRegistrations.TryRemove(unregisterRequest.RegistrationId, out operation);
                 unregisterRequest.Complete();
             }
         }

@@ -21,6 +21,12 @@ namespace WampSharp.V2.Client
             set;
         }
 
+        public long RegistrationId
+        {
+            get;
+            set;
+        }
+
         protected Task<TResult> Task
         {
             get { return mTaskCompletionSource.Task; }
